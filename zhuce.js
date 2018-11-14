@@ -23,7 +23,7 @@ const zsqSchema = new Schema({
                         name:String,
                         password:Number|String      //加密完变成了字符串。。。
                     });
-const User = db.model("user",zsqSchema);
+const User = db.model("user",zsqSchema);  //用zsqSchema 检测user数据库数据类型是否符合指定类型
 
 
 router.get('/',(ctx)=>{

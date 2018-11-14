@@ -26,7 +26,7 @@ const zsqSchema = new Schema({
 const User = db.model("user",zsqSchema);  //用zsqSchema 检测user数据库数据类型是否符合指定类型
 
 
-router.get('/',(ctx)=>{
+router.get('/',async (ctx)=>{
     ctx.body="index";
 });
 //动态路由

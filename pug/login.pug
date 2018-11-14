@@ -1,0 +1,16 @@
+doctype html
+html
+    head
+        title 登陆
+        meta(charset="utf-8")
+    body
+        div#box
+            h1  这是登录页
+
+            form(action="/user/login" method="post")
+                input(type="text" name='name')
+                <br>
+                input(type="password" name="password")
+                <br>
+                input(type="submit" value="登陆")
+

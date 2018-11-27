@@ -76,11 +76,24 @@ router.post('/user/login',async ctx=>{  //获取数据 post
    }).then(async res=>{
            console.log(res);
            if(res){
+               //设置cookie
+               ctx.cookies.set("username",userName,{ //(name,value,options)
+                    path:'/',  //所有页面都携带这个cookie信息
+                    httpOnly:true, //false 控制台document.cookie就得不到这个cookie,但是Application还是可以看到
+                    maxAge:1000*60*60,  //1小时过期
+                    //secure:true, //默认false,true则 https也可访问
+               });
+               ctx.cookies.set("_id",res[0]._id,{
+                    httpOnly:true,
+                    maxAge:36e5
+               });
+
+               ctx.session={  //设置session
+                   username:userName,
+                   _id:res[0]._id,
+               };
+
                await ctx.render('index.pug');
-               //登陆成功设置session
-               ctx.session.username = userName;
-               ctx.session._id = res[0]._id;
-               console.log(ctx.session)
            }else{
                ctx.body = "密码错误"
            }

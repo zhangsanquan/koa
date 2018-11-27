@@ -4,6 +4,7 @@ const mongoose =  require('mongoose');
 const views = require('koa-views');
 const {join} = require('path');
 const cors = require('koa2-cors');
+const session = require('koa-session');
 const Router = require('koa-router');
 
 const app = new Koa();
@@ -12,6 +13,20 @@ const router = new Router();
 app.use(koaBody());
 app.use(cors());  //跨域
 app.use(views(join(__dirname,"pug"),{extension:'pug'}));
+
+//session
+app.keys = ['session key'];
+const CONFIG = {
+    key:'koa:sess',
+    maxAge:86400000,  //过期时间
+    autoCommit:true,
+    overwrite:true,
+    httpOnly:false,
+    signed:true,
+    rolling:true,  //在过期时间内操作，则过期时间往后推迟
+    renew:false,
+};
+app.use(session(CONFIG,app));
 
 //操作数据库
 const db = mongoose.createConnection("mongodb://localhost:27017/user",{useNewUrlParser:true});
@@ -51,17 +66,21 @@ router.post('/user/login',async ctx=>{  //获取数据 post
            //console.log(data)
             if( data[0].password == pwd ){  //密码正确  有时候要加密后对比 MD5(pwd)
                 //ctx.body = "登陆成功";
-                return resolve('登陆成功')
+                return resolve(data)
             }else{
                //ctx.body = "密码错误";
-               return resolve('密码错误');
+               return resolve('');
             }
        })
 
    }).then(async res=>{
            console.log(res);
-           if(res== "登陆成功"){
+           if(res){
                await ctx.render('index.pug');
+               //登陆成功设置session
+               ctx.session.username = userName;
+               ctx.session._id = res[0]._id;
+               console.log(ctx.session)
            }else{
                ctx.body = "密码错误"
            }

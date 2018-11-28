@@ -48,7 +48,7 @@ router.get('/news/:page',async ctx=>{
     let page = ctx.params.page || 1; //默认第一页
     //查询新闻文章数据库Article
   let article_data = await Article.find()
-            .sort('-created')  // - 代表降序 排序
+            .sort('-created')  //created  按创建时间排序 （也可以按其他字段排序） - 代表降序 排序
             .skip(5*(page-1))  //每页5条，如第二页就跳过5*（2-1）条数据，所以第二页从5-9
             .limit(5)          //每页限制5条
             .populate({

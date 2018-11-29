@@ -47,20 +47,18 @@ router.get('/news/:page',async ctx=>{
     //获取前端请求页面第几页
     let page = ctx.params.page || 1; //默认第一页
     //查询新闻文章数据库Article
-  let article_data = await Article.find()
-            .sort('-created')  //created  按创建时间排序 （也可以按其他字段排序） - 代表降序 排序
-            .skip(5*(page-1))  //每页5条，如第二页就跳过5*（2-1）条数据，所以第二页从5-9
-            .limit(5)          //每页限制5条
-            .populate({
-                path:"author" ,  // 跟上面的schema码的关联属性一致
-                select:'title content'   //筛选出需要输出的值
-            })
-            .then(data=>{
-
-            })
-            .catch(err=>{
-                console.log(err)
-            })
+   let article_data = await Article.find()
+                    .sort('-created')  //created  按创建时间排序 （也可以按其他字段排序） - 代表降序 排序
+                    .skip(5*(page-1))  //每页5条，如第二页就跳过5*（2-1）条数据，所以第二页从5-9
+                    .limit(5)          //每页限制5条
+                    .populate({
+                        path:"author" ,  // 跟上面的schema码的关联属性一致
+                        select:'title content'   //筛选出需要输出的值
+                    })
+                    .then(data => data)  //return data  把data赋值给article_data
+                    .catch(err=>{
+                        console.log(err)
+                    })
 
     //await ctx.body=article_data
     await ctx.render('news.pug',{

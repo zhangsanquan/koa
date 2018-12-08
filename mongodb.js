@@ -18,6 +18,7 @@ const zsqSchema = new Schema({
     age:Number
 });
 
+//  zsqSchema.set('collection','cwp');   加了这句底下生成的表就不会加 s 
 //在zsq库里新创建cwp这个表，第二个是上面设置的编码格式
 const useSchema = db.model("cwp",zsqSchema);// 让cwp这个表使用schema检测数据类型
 

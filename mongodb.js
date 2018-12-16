@@ -15,8 +15,14 @@ db.on("open",()=>{
 const Schema = mongoose.Schema;
 const zsqSchema = new Schema({
     name:String,
-    age:Number
+    age:{
+        type:String,
+        index:true  //索引
+    },
+    hope:String
 });
+
+//zsqSchema.index({"age":1}); 另一种索引方式
 
 //  zsqSchema.set('collection','cwp');   加了这句底下生成的表就不会加 s 
 //在zsq库里新创建cwp这个表，第二个是上面设置的编码格式
@@ -30,12 +36,95 @@ const data1 = {
 };
 const data2 = {
     name:"sss",
-    age:100
+    age:100,
+    hope:'eat'
 };
 
-const d1 =new useSchema(data1);  //把data1插入数据库
+/*const d1 =new useSchema(data1);  //把data1插入数据库
 d1.save().then(res=>{
     console.log(res)
 }).catch(error=>{
     console.log(error)
-})
+});*/
+
+/*useSchema.insertMany([
+    {
+        name:'zsq1',
+        age:'18',
+        hope:'much1'
+    },
+    {
+        name:'zsq2',
+        age:'20',
+        hope:'much2'
+    },
+    {
+        name:'zsq3',
+        age:'22',
+        hope:'much3'
+    },
+    {
+        name:'zsq4',
+        age:'30',
+        hope:'much4'
+    },
+]);*/
+
+
+async function groupData(){ //数据库操作时异步IO  必须这样写才能取到data3
+    const data3 =await useSchema.aggregate([{$group:{_id:"$name",num:{$sum:1}}}]);
+    console.log(data3);
+
+    const data4 = await useSchema.aggregate([{
+        $group:{_id:"$name",maxAge:{$max:"$age"},minAge:{$avg:"$age"}}
+    }]);
+    console.log(data4);
+
+    const data5 = await useSchema.aggregate([{
+        $group:{_id:"$name",numberOne:{$first:"$age"}}
+    }]);
+    console.log(data5);
+
+    const data6 = await useSchema.aggregate([{
+        $project:{
+            _id:0,
+            name:1
+        }
+    }]);
+    console.log(data6);
+
+    const data7 = await useSchema.aggregate([{
+        $sort:{
+            age:1     //1：升序   -1：降序
+        }
+    }]);
+    console.log(data7);
+
+    const data8 = await useSchema.aggregate([
+        {$match:{
+               // name:"zzz"   //过滤筛选出name zzz的 集合文档{}
+                age:{$gt:18, $lt:30}
+            }},
+        { $group: {
+                _id:null,count:{ $sum: 1}  //group操作必须有个_id,所以给其置null。
+            }}
+    ]);
+    console.log(data8);
+
+    const data9 = await useSchema.aggregate([
+            { $project:{
+                _id:0,
+                age:1
+            }},
+            { $limit: 3 }
+        ]);
+    console.log(data9);
+
+    const data10 = await useSchema.aggregate([{
+        $unwind: "$hope"   //将hope字段的数组转化为对象
+    }]);
+    console.log(data10);
+
+}
+
+groupData()

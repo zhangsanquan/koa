@@ -21,13 +21,13 @@ db.on("open",()=>{
 const Schema = mongoose.Schema;
 const zsqSchema = new Schema({
                         name:String,
-                        password:Number|String      //加密完变成了字符串。。。
+                        password:Number||String      //加密完变成了字符串。。。
                     });
 const User = db.model("user",zsqSchema);  //用zsqSchema 检测user数据库数据类型是否符合指定类型
 
 
 router.get('/',async (ctx)=>{
-    ctx.body="index";
+    ctx.body="index";  // 等同于   ctx.response.message="index";
 });
 //动态路由
 router.get('/index/:id',async (ctx)=>{
@@ -38,7 +38,7 @@ router.get('/user/zhuce',async (ctx)=>{
     await ctx.render("zhuce.pug");
 });
 router.post('/user/zhuce',async (ctx)=>{ //这里用post
-   //console.log(ctx.request.body);  //注意要koa-body 不然显示undefined
+   //console.log(ctx.request.body);  //post方法要用 koa-body 不然显示undefined， get方法 用ctx.query 接收参数‘对象’， 或者用ctx.querystring接收请求‘字符串’
    const userName =ctx.request.body.name;
    const passWord = ctx.request.body.password;
 
@@ -60,13 +60,16 @@ router.post('/user/zhuce',async (ctx)=>{ //这里用post
                if(err){
                    reject(err)
                }else{
-                   resolve("注册成功")
+                   //resolve("注册成功")
+                   resolve(data);
                }
            });
        })
    }).then(async res=>{
        console.log(res);
        ctx.body = res;
+
+
      /*  if(res="注册成功"){
            window.location.href="xxx"
            await ctx.render()

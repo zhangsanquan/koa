@@ -107,6 +107,6 @@ router.post('/user/login',async ctx=>{  //获取数据 post
 
 app.use(router.routes())
     .use(router.allowedMethods())
-    .listen(8050,()=>{
+    .listen(8050,() => {
         console.log('服务器启动成功')
     });

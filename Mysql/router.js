@@ -4,6 +4,9 @@ const Router = require('koa-router');
 
 const app = new Koa();
 const router = new Router();
+/*const router = new Router({  //给路由加个前缀  -->   http://localhost:8050/api,
+    prefix: '/api'
+})*/
 app.use(koaBody());
 
 const { getAllCustomers, getCustomerById, getCustomerByName, updateCustomer,

@@ -14,18 +14,18 @@ async function getCustomerById(id) {//查找
     return Custom.findById(id)
 }
 
-async function getCustomerByName() {
+async function getCustomerByName(name) {
     return Custom.findAll({
         where: {
             name: {
-                [Op.like]: '${name}%'  //Op.like  模糊查询， 只有带有那个字的全部找到
+                [Op.like]: name  //Op.like  模糊查询， 只要带有name的那个字段的全部找到
             }
         }
     })
 }
 
 async function updateCustomer(id, params) { //更新；   params:前端传来的要更新的数据
-    const item = await getCustomerById();
+    const item = await getCustomerById(id);
     if( item ) {
         return item.update(params)
     } else {

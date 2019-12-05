@@ -1,6 +1,6 @@
 const Router = require('koa-router');
 const routerMethod =require('./routerMethod');
-const router = new Router();
+const router = new Router();  //new Router({prefix: '/api'})  路由前缀
 
 router.get('/',routerMethod.home)
       .get('/login',routerMethod.login)
